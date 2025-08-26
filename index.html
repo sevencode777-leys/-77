@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>رفيق — تطبيق إسلامي شامل</title>
+  <meta name="theme-color" content="#0f766e" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <i class="fa-solid fa-mosque"></i>
+      <span>رفيق
+      </span>
+    </div>
+    <div class="header-actions">
+      <button id="locateBtn" class="btn ghost" title="تحديد موقعي"><i class="fa-solid fa-location-crosshairs"></i><span class="hide-sm"> تحديد الموقع</span></button>
+      <div class="location-badge" title="الموقع الحالي">
+        <i class="fa-solid fa-location-dot"></i>
+        <span id="locationLabel">غير محدد</span>
+      </div>
+      <button id="themeToggle" class="btn ghost" title="الوضع الليلي">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-target="prayers"><i class="fa-regular fa-clock"></i><span> أوقات الصلاة</span></button>
+    <button class="tab" data-target="quran"><i class="fa-solid fa-book-quran"></i><span> القرآن</span></button>
+    <button class="tab" data-target="adhkar"><i class="fa-solid fa-hands-praying"></i><span> الأذكار</span></button>
+    <button class="tab" data-target="hadith"><i class="fa-solid fa-scroll"></i><span> الأحاديث</span></button>
+    <button class="tab" data-target="qibla"><i class="fa-solid fa-compass"></i><span> القبلة</span></button>
+    <button class="tab" data-target="hijri"><i class="fa-solid fa-calendar-days"></i><span> التقويم</span></button>
+  </nav>
+
+  <main class="container">
+    <!-- أوقات الصلاة -->
+    <section id="prayers" class="view active">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <h2>أوقات الصلاة اليوم</h2>
+            <div class="subtle" id="gregHijri"></div>
+          </div>
+          <ul id="prayerList" class="list times"></ul>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>الصلاة القادمة</h3>
+          </div>
+          <div id="nextPrayer" class="next-prayer">
+            <div class="name">—</div>
+            <div class="countdown">—:—:—</div>
+          </div>
+          <div class="divider"></div>
+          <form id="manualLocationForm" class="inline-form">
+            <input type="text" id="cityInput" placeholder="المدينة" />
+            <input type="text" id="countryInput" placeholder="الدولة" />
+            <button type="submit" class="btn"><i class="fa-solid fa-magnifying-glass-location"></i> ضبط الموقع يدويًا</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- القرآن -->
+    <section id="quran" class="view">
+      <div class="card">
+        <div class="card-header">
+          <h2>القرآن الكريم</h2>
+          <div class="controls">
+            <select id="surahSelect"></select>
+            <select id="translationSelect" title="الترجمة">
+              <option value="none">بدون ترجمة</option>
+              <option value="en.asad">English — Asad</option>
+              <option value="en.pickthall">English — Pickthall</option>
+              <option value="ur.jalandhry">Urdu — Jalandhry</option>
+            </select>
+            <button id="playSurah" class="btn"><i class="fa-solid fa-play"></i> تشغيل السورة</button>
+          </div>
+        </div>
+        <div id="ayahContainer" class="ayahs"></div>
+        <div class="audio-bar">
+          <button id="prevAyah" class="btn ghost"><i class="fa-solid fa-backward-step"></i></button>
+          <button id="toggleAudio" class="btn"><i class="fa-solid fa-play"></i></button>
+          <button id="nextAyah" class="btn ghost"><i class="fa-solid fa-forward-step"></i></button>
+          <div class="audio-status">
+            <span id="audioLabel">—</span>
+          </div>
+        </div>
+        <audio id="audioPlayer"></audio>
+      </div>
+    </section>
+
+    <!-- الأذكار -->
+    <section id="adhkar" class="view">
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-header"><h3>أذكار الصباح</h3></div>
+          <ul id="adhkarMorning" class="list bullets"></ul>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>أذكار المساء</h3></div>
+          <ul id="adhkarEvening" class="list bullets"></ul>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>أذكار عامة</h3></div>
+          <ul id="adhkarGeneral" class="list bullets"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- الأحاديث -->
+    <section id="hadith" class="view">
+      <div class="card">
+        <div class="card-header">
+          <h2>الأحاديث النبوية</h2>
+          <div class="controls">
+            <select id="hadithBook"></select>
+            <div class="pager">
+              <button id="hadithPrev" class="btn ghost"><i class="fa-solid fa-chevron-right"></i></button>
+              <span id="hadithRange" class="subtle">—</span>
+              <button id="hadithNext" class="btn ghost"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+          </div>
+        </div>
+        <ul id="hadithList" class="list hadith"></ul>
+      </div>
+    </section>
+
+    <!-- القبلة -->
+    <section id="qibla" class="view">
+      <div class="card">
+        <div class="card-header">
+          <h2>اتجاه القبلة</h2>
+          <div class="controls">
+            <button id="orientBtn" class="btn ghost"><i class="fa-solid fa-compass-drafting"></i> تفعيل البوصلة</button>
+          </div>
+        </div>
+        <div class="qibla-wrap">
+          <div class="compass">
+            <div class="dial"></div>
+            <div class="needle" id="qiblaNeedle"></div>
+          </div>
+          <div class="qibla-info">
+            <div><i class="fa-solid fa-location-arrow"></i> زاوية القبلة: <b id="qiblaAngle">—</b>°</div>
+            <div><i class="fa-solid fa-compass"></i> اتجاه جهازك: <b id="deviceHeading">—</b>°</div>
+            <div class="hint subtle">قد تتطلب الأجهزة إذنًا للوصول لحساس الاتجاه. الأفضل استخدام HTTPS.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- التقويم الهجري -->
+    <section id="hijri" class="view">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><h2>تاريخ اليوم الهجري</h2></div>
+          <div id="todayHijri" class="big-date">—</div>
+          <div id="todayGreg" class="subtle center">—</div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>أحداث الشهر الهجري</h3></div>
+          <ul class="list bullets">
+            <li><b>ملاحظة:</b> سنعرض المناسبات عند ربط مصدر تقاويم موسع لاحقًا.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div>© <span id="year"></span> رفيق — تطبيق إسلامي شامل برمج بواصطة ليث ملك الجافا سكريبت علي ولطي زمر على الكوع</div>
+    <div class="subtle">مصادر الأوقات والقبلة والتقويم: Aladhan API — القرآن: AlQuran Cloud — الأحاديث: Hadith Gading API</div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
